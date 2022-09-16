@@ -1,0 +1,83 @@
+﻿@page "/CaesarCipherView"
+@using Ciphers.Transposition
+@using Ciphers
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group input-group-sm mb-3 w-25">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Key</span>
+                </div>
+                <input type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
+                       @bind="CurrentKey">
+            </div>
+            
+            <div class="form-group">
+                <label >Chose alphabet</label>
+                <select multiple class="form-control">
+                    @foreach (var alphabet in Alphabets)
+                    {
+                        <option>@alphabet</option>
+                    }
+                </select>
+              </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form>
+                <div class="form-group">
+                    <label>Input:</label>
+                    <textarea class="form-control" rows="6">@InputText</textarea>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form>
+                <div class="form-group">
+                    <label>Output:</label>
+                    <textarea class="form-control" rows="6">@OutputText</textarea>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    private string UserAlphabet { get; set; } = string.Empty;
+
+    private IReadOnlyCollection<string> Alphabets => new[]
+    {
+        "абвгдежзиклмн",
+        "abcdef",
+        UserAlphabet
+    };
+
+    private Mode CurrentMode { get; set; }
+    
+    private string CurrentAlphabet { get; set; }
+
+    private int CurrentKey { get; set; }
+
+    private string InputText { get; set; }
+
+    private string OutputText => string.IsNullOrEmpty(InputText) ?
+        null : 
+        CurrentMode switch
+        {
+            Mode.Encryption => GetCipher().Encrypt(InputText),
+            Mode.Decryption => GetCipher().Encrypt(InputText),
+            _ => throw new NotImplementedException()
+        };
+
+    private Cipher GetCipher() => new CaesarCipher(CurrentAlphabet.ToCharArray(), CurrentKey);
+
+    public enum Mode
+    {
+        Encryption,
+        Decryption
+    }
+}

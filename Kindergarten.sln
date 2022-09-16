@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransportTask", "TransportT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "View", "View\View.csproj", "{1C5B7C3C-B2EA-4B6D-8CB8-185C2AA19AB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ciphers", "Ciphers\Ciphers.csproj", "{65203EDB-8FCF-4C76-9132-211D2713A6D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{1C5B7C3C-B2EA-4B6D-8CB8-185C2AA19AB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C5B7C3C-B2EA-4B6D-8CB8-185C2AA19AB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C5B7C3C-B2EA-4B6D-8CB8-185C2AA19AB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65203EDB-8FCF-4C76-9132-211D2713A6D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65203EDB-8FCF-4C76-9132-211D2713A6D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65203EDB-8FCF-4C76-9132-211D2713A6D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65203EDB-8FCF-4C76-9132-211D2713A6D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
