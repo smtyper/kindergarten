@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Ciphers\Ciphers.csproj" />
       <ProjectReference Include="..\LinearProgramming\LinearProgramming.csproj" />
       <ProjectReference Include="..\TransportTask\TransportTask.csproj" />
     </ItemGroup>
