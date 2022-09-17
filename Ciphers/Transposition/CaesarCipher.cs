@@ -11,7 +11,7 @@ public class CaesarCipher : Cipher
     {
         Key = key;
 
-        var charMapping = alphabet
+        var charMapping = Alphabet
             .Select((chr, index) => (chr, index))
             .ToDictionary(pair => pair.chr, pair => Alphabet[Math.Abs(pair.index + Key) % alphabet.Count]);
 
