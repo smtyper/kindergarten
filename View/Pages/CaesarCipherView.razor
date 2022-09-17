@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <div class="input-group input-group-sm mb-3 w-25">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Key</span>
+                    <span class="input-group-text btn-dark">Key</span>
                 </div>
                 <input type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                        @bind="CurrentKey">
@@ -15,21 +15,11 @@
         </div>
     </div>
 
-    <label for="alphabetSelection">Choose alphabet:</label>
-    <div class="form-row mt-3" id="alphabetSelection">
-        <select class="form-control" @bind="CurrentAlphabet">
-            @foreach (var alphabet in Alphabets)
-            {
-                <option value="@alphabet">@alphabet</option>
-            }
-        </select>
-    </div>
-    
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="input-group input-group-sm mb-3 w-25">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Mode</span>
+                    <span class="input-group-text btn-dark">Mode</span>
                 </div>
                 <select class="form-control" @bind="CurrentMode">
                     @foreach (var mode in Enum.GetValues(typeof(Mode)))
@@ -38,6 +28,22 @@
                     }
                 </select>
             </div>
+        </div>
+    </div>
+
+    <div class="row mt-3 gx-0">
+        <div class="col-md-1">
+            <div class="input-group-prepend">
+                <span class="input-group-text btn-dark text-center">Alphabet</span>
+            </div>
+        </div>
+        <div class="col-md">
+            <select class="form-control" @bind="CurrentAlphabet">
+                @foreach (var alphabet in Alphabets)
+                {
+                    <option value="@alphabet">@alphabet</option>
+                }
+            </select>
         </div>
     </div>
 
@@ -60,6 +66,12 @@
         </div>
     </div>
     
+    <div class="row mt-3">
+        <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-secondary" @onclick="@(() => InputText = OutputText)">←</button>
+        </div>
+    </div>
+
     <div class="row mt-3">
         <form>
             <div class="form-group">
