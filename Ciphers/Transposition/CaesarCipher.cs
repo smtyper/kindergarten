@@ -19,9 +19,13 @@ public class CaesarCipher : Cipher
         DecryptionCharMapping = charMapping.ToDictionary(pair => pair.Value, pair => pair.Key);
     }
 
-    protected override string EncryptText(string text) => string.Concat(text
-        .Select(chr => EncryptionCharMapping[chr]));
+    public override string EncryptText(string text) => string.Concat(text
+        .Select(chr => Alphabet.Contains(chr) ?
+            EncryptionCharMapping[chr] :
+            chr));
 
-    protected override string DecryptText(string text) => string.Concat(text
-        .Select(chr => DecryptionCharMapping[chr]));
+    public override string DecryptText(string text) => string.Concat(text
+        .Select(chr => Alphabet.Contains(chr) ?
+            DecryptionCharMapping[chr] :
+            chr));
 }
