@@ -3,7 +3,7 @@
 @using Ciphers
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-md-12">
             <div class="input-group input-group-sm mb-3 w-25">
                 <div class="input-group-prepend">
@@ -12,66 +12,103 @@
                 <input type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"
                        @bind="CurrentKey">
             </div>
-            
-            <div class="form-group">
-                <label >Chose alphabet</label>
-                <select multiple class="form-control">
-                    @foreach (var alphabet in Alphabets)
-                    {
-                        <option>@alphabet</option>
-                    }
-                </select>
-              </div>
         </div>
     </div>
-    <div class="row">
+
+    <label for="alphabetSelection">Choose alphabet:</label>
+    <div class="form-row mt-3" id="alphabetSelection">
+        <select class="form-control" @bind="CurrentAlphabet">
+            @foreach (var alphabet in Alphabets)
+            {
+                <option value="@alphabet">@alphabet</option>
+            }
+        </select>
+    </div>
+    
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="input-group input-group-sm mb-3 w-25">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Mode</span>
+                </div>
+                <select class="form-control" @bind="CurrentMode">
+                    @foreach (var mode in Enum.GetValues(typeof(Mode)))
+                    {
+                        <option value="@mode">@mode</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
         <div class="col-md-6">
             <form>
                 <div class="form-group">
-                    <label>Input:</label>
-                    <textarea class="form-control" rows="6">@InputText</textarea>
+                    <label for="inputTextArea">Input:</label>
+                    <textarea class="form-control" rows="6" id="inputTextArea" @bind="InputText"></textarea>
                 </div>
             </form>
         </div>
         <div class="col-md-6">
             <form>
                 <div class="form-group">
-                    <label>Output:</label>
-                    <textarea class="form-control" rows="6">@OutputText</textarea>
+                    <label for="outputTextArea">Output:</label>
+                    <textarea disabled class="form-control" rows="6" id="outputTextArea" @bind="OutputText"></textarea>
                 </div>
             </form>
         </div>
+    </div>
+    
+    <div class="row mt-3">
+        <form>
+            <div class="form-group">
+                <label for="userAlphabetInput">Print custom alhabet:</label>
+                <textarea class="form-control" rows="1" id="userAlphabetInput" @bind="UserAlphabet"></textarea>
+            </div>
+        </form>
     </div>
 
 </div>
 
-@code {
+@code 
+{
+    private const string EnglishLowercase = "abcdefghijklmnopqrstuvwxyz0123456789";
+    private const string EnglishUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private const string RussianLowercase = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789";
+    private const string RussionUppercase = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789";
 
     private string UserAlphabet { get; set; } = string.Empty;
 
     private IReadOnlyCollection<string> Alphabets => new[]
     {
-        "абвгдежзиклмн",
-        "abcdef",
+        EnglishLowercase,
+        EnglishUppercase,
+        RussianLowercase,
+        RussionUppercase,
         UserAlphabet
     };
 
-    private Mode CurrentMode { get; set; }
-    
-    private string CurrentAlphabet { get; set; }
+    private Mode CurrentMode { get; set; } = Mode.Encryption;
+
+    private string CurrentAlphabet { get; set; } = EnglishLowercase;
 
     private int CurrentKey { get; set; }
 
     private string InputText { get; set; }
 
-    private string OutputText => string.IsNullOrEmpty(InputText) ?
-        null : 
-        CurrentMode switch
-        {
-            Mode.Encryption => GetCipher().Encrypt(InputText),
-            Mode.Decryption => GetCipher().Encrypt(InputText),
-            _ => throw new NotImplementedException()
-        };
+    private string OutputText
+    {
+        get => string.IsNullOrEmpty(InputText) ? 
+            null : 
+            CurrentMode switch
+            {
+                Mode.Encryption => GetCipher().EncryptText(InputText),
+                Mode.Decryption => GetCipher().DecryptText(InputText),
+                _ => throw new NotImplementedException()
+            };
+        set {}
+    }
 
     private Cipher GetCipher() => new CaesarCipher(CurrentAlphabet.ToCharArray(), CurrentKey);
 
