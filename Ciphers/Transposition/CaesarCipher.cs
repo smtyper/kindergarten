@@ -13,7 +13,7 @@ public class CaesarCipher : Cipher
 
         var charMapping = alphabet
             .Select((chr, index) => (chr, index))
-            .ToDictionary(pair => pair.chr, pair => Alphabet[pair.index + Key]);
+            .ToDictionary(pair => pair.chr, pair => Alphabet[Math.Abs(pair.index + Key) % alphabet.Count]);
 
         EncryptionCharMapping = charMapping;
         DecryptionCharMapping = charMapping.ToDictionary(pair => pair.Value, pair => pair.Key);
