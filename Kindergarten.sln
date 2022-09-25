@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ciphers", "Ciphers\Ciphers.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerVision", "ComputerVision\ComputerVision.csproj", "{C8F3ACAF-93FD-40CA-B74C-7ED5B57CCA53}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{C75D1A3B-51E1-4473-82FE-C9AAD75F91BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{C8F3ACAF-93FD-40CA-B74C-7ED5B57CCA53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8F3ACAF-93FD-40CA-B74C-7ED5B57CCA53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8F3ACAF-93FD-40CA-B74C-7ED5B57CCA53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C75D1A3B-51E1-4473-82FE-C9AAD75F91BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C75D1A3B-51E1-4473-82FE-C9AAD75F91BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C75D1A3B-51E1-4473-82FE-C9AAD75F91BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C75D1A3B-51E1-4473-82FE-C9AAD75F91BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
