@@ -2,6 +2,9 @@
 @using Ciphers.Transposition
 @using Ciphers
 @using System.Numerics
+@using System.Reflection
+@using System.Text
+@using Ciphers.Hackers
 
 <div class="container-fluid">
     <div class="row mt-3">
@@ -31,6 +34,13 @@
             </div>
         </div>
     </div>
+    @if (CurrentMode is Mode.Hack)
+    {
+        <div class="row mt-1">
+            <label>Upload file for frequency analysis</label>
+            <InputFile OnChange="@LoadFrequencyAnalysisTextAsync"/>
+        </div>
+    }
 
     <div class="row mt-3 gx-0">
         <div class="col-md-1">
@@ -52,8 +62,9 @@
         <div class="col-md-6">
             <form>
                 <div class="form-group">
-                    <label for="inputTextArea">Input:</label>
-                    <textarea class="form-control" rows="6" id="inputTextArea" @bind="InputText"></textarea>
+                    <label for="inputTextArea">Print your text here, or upload a file:</label>
+                    <InputFile OnChange="@LoadInputTextAsync"/>
+                    <textarea class="form-control mt-2" rows="6" id="inputTextArea" @bind="InputText"></textarea>
                 </div>
             </form>
         </div>
@@ -61,7 +72,7 @@
             <form>
                 <div class="form-group">
                     <label for="outputTextArea">Output:</label>
-                    <textarea disabled class="form-control" rows="6" id="outputTextArea" @bind="OutputText"></textarea>
+                    <textarea disabled class="form-control mt-2" rows="6" id="outputTextArea" @bind="OutputText"></textarea>
                 </div>
             </form>
         </div>
@@ -88,8 +99,10 @@
 {
     private const string EnglishLowercase = "abcdefghijklmnopqrstuvwxyz0123456789";
     private const string EnglishUppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private const string EnglishLowercaseNoDigits = "abcdefghijklmnopqrstuvwxyz";
     private const string RussianLowercase = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя0123456789";
     private const string RussionUppercase = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789";
+    private const string RussianLowercaseNoDigits = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя";
 
     private string UserAlphabet { get; set; } = string.Empty;
 
@@ -97,8 +110,10 @@
     {
         EnglishLowercase,
         EnglishUppercase,
+        EnglishLowercaseNoDigits,
         RussianLowercase,
         RussionUppercase,
+        RussianLowercaseNoDigits,
         UserAlphabet
     };
 
@@ -108,7 +123,7 @@
 
     private string CurrentKeyInput { get; set; } = "0";
 
-    public int CurrentKey =>
+    private int CurrentKey =>
         (int)(BigInteger.Parse(string.Concat(CurrentKeyInput.Where(char.IsDigit))) % CurrentAlphabet.Length);
 
     private string InputText { get; set; }
@@ -121,16 +136,45 @@
             {
                 Mode.Encryption => GetCipher().EncryptText(InputText),
                 Mode.Decryption => GetCipher().DecryptText(InputText),
+                Mode.Hack => Hacker.Hack(InputText),
                 _ => throw new NotImplementedException()
             };
         set {}
     }
 
+
+    private Hacker Hacker { get; set; } = new FrequencyAnalysisHacker(EnglishLowercase, string.Empty);
+
     private Cipher GetCipher() => new CaesarCipher(CurrentAlphabet.ToCharArray(), CurrentKey);
+
+    private async Task LoadInputTextAsync(InputFileChangeEventArgs inputFileArgs)
+    {
+        var text = await ReadTextFromInputFileAsync(inputFileArgs);
+
+        InputText = text;
+    }
+
+    private async Task LoadFrequencyAnalysisTextAsync(InputFileChangeEventArgs inputFileArgs)
+    {
+        var text = await ReadTextFromInputFileAsync(inputFileArgs);
+
+        Hacker = new FrequencyAnalysisHacker(CurrentAlphabet, text);
+    }
+
+    private static async ValueTask<string> ReadTextFromInputFileAsync(InputFileChangeEventArgs inputFileArgs)
+    {
+        await using var fileStream = inputFileArgs.File.OpenReadStream(1024000L);
+        using var streamReader = new StreamReader(fileStream, Encoding.UTF8);
+
+        var text = await streamReader.ReadToEndAsync();
+
+        return text;
+    }
 
     public enum Mode
     {
         Encryption,
-        Decryption
+        Decryption,
+        Hack
     }
 }
