@@ -6,6 +6,7 @@ namespace ConsoleApp1
     {
         public static void Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             var rnd = new Random(DateTime.Now.Millisecond);
 
@@ -20,7 +21,7 @@ namespace ConsoleApp1
             {
                 Console.WriteLine($"Символ: {alph[i]}");
                 var binArray = binArrays[i];
-                Console.WriteLine($"Исходные многочлен: {string.Join("", binArray)}");
+                Console.WriteLine($"Исходный многочлен: {string.Join("", binArray)}");
 
                 var shift = Multi(binArray, n - k, 1);
                 Mod2(shift);
