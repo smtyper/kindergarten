@@ -16,7 +16,6 @@ namespace ConsoleApp1
             var gen = new int[] { 1, 1, 1, 1, 0, 1 };
 
             var binArrays = GetBin(alph);
-            var codeAlph = new int[alph.Length][];
             for (var i = 0; i < alph.Length; i++)
             {
                 Console.WriteLine($"Символ: {alph[i]}");
@@ -82,16 +81,6 @@ namespace ConsoleApp1
             }
 
             return quotient;
-        }
-
-        public static int[] Multi(int[] x, int[] y)
-        {
-            var multi = new int[0];
-
-            for (var i = 0; i < y.Length; i++)
-                multi = Sum(multi, Multi(x, i, y[i]));
-
-            return multi;
         }
 
         public static int[] Multi(int[] x, int d, int c)
