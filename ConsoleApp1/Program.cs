@@ -7,33 +7,55 @@ namespace ConsoleApp1
         public static void Main(string[] args)
         {
             const string alph = "еёжзийк";
-            const int n = 13;
-            const int k = 8;
+            const int n = 21;
+            const int k = 16;
 
-            var text = "t";
             var gen = new int[] { 1, 1, 1, 1, 0, 1 };
 
-            var binaryArray = GetBin(text);
-            var shift = Multi(binaryArray, n - k, 1);
-            Mod2(shift);
-            var dev = Devide(shift, gen, out var rem);
-            Mod2(rem);
-            var code = Sum(shift, rem);
-            Mod2(code);
+            var binArrays = GetBin(alph);
+            var codeAlph = new int[alph.Length][];
+            for (var i = 0; i < alph.Length; i++)
+            {
+                var binArray = binArrays[i];
+
+                var shift = Multi(binArray, n - k, 1);
+                Mod2(shift);
+                Devide(shift, gen, out var rem);
+                Mod2(rem);
+                var code = Sum(shift, rem);
+                Mod2(code);
+
+                code[0] = 1;
+
+                codeAlph[i] = code;
+
+                Devide(code, gen, out var checkRem);
+                Mod2(checkRem);
+
+                if (checkRem.Any(bit => bit is not 0))
+                    ;
+            }
         }
 
-        public static int[] GetBin(string str)
+        public static int[][] GetBin(string str)
         {
-            var bytes = Encoding.UTF8.GetBytes(str);
-            var stringBuilder = new StringBuilder();
-            foreach (var e in bytes)
-                stringBuilder.Append(Convert.ToString(e, 2).PadLeft(8, '0'));
+            var binArrays = new int[str.Length][];
 
-            var binArray = new int[stringBuilder.Length];
-            for (var i = 0; i < binArray.Length; i++)
-                binArray[i] = int.Parse(stringBuilder[i].ToString());
+            for (var i = 0; i < binArrays.Length; i++)
+            {
+                var bytes = Encoding.UTF8.GetBytes(str[i].ToString());
+                var stringBuilder = new StringBuilder();
+                foreach (var e in bytes)
+                    stringBuilder.Append(Convert.ToString(e, 2).PadLeft(8, '0'));
 
-            return binArray;
+                var symBinArray = new int[stringBuilder.Length];
+                for (var j = 0; j < symBinArray.Length; j++)
+                    symBinArray[j] = int.Parse(stringBuilder[j].ToString());
+
+                binArrays[i] = symBinArray;
+            }
+
+            return binArrays;
         }
 
         public static int[] Devide(int[] dividend, int[] divisor, out int[] remainder)
@@ -48,9 +70,7 @@ namespace ConsoleApp1
                     remainder[remainder.Length - i - j - 1] -= c * divisor[divisor.Length - j - 1];
             }
 
-            remainder = Trim(remainder);
-
-            return Trim(quotient);
+            return quotient;
         }
 
         public static int[] Multi(int[] x, int[] y)
@@ -77,7 +97,7 @@ namespace ConsoleApp1
         public static int[] Sum(int[] x, int[] y)
         {
             var bigger = x.Length > y.Length ? x : y;
-            var lesser = x.Length < y.Length ? x : y;
+            var lesser = bigger == x ? y : x;
             var sum = new int[bigger.Length];
             for (var i = 0; i < bigger.Length; i++)
                 sum[i] = bigger[i] + (i < lesser.Length ? lesser[i] : 0);
@@ -96,7 +116,5 @@ namespace ConsoleApp1
                     array[i] = abs % 2;
             }
         }
-
-        public static int[] Trim(int[] array) => array.Reverse().SkipWhile(num => num == 0).Reverse().ToArray();
     }
 }
