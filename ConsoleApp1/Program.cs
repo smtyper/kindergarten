@@ -6,9 +6,12 @@ namespace ConsoleApp1
     {
         public static void Main(string[] args)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var rnd = new Random(DateTime.Now.Millisecond);
+
             const string alph = "еёжзийк";
-            const int n = 21;
-            const int k = 16;
+            const int n = 13;
+            const int k = 8;
 
             var gen = new int[] { 1, 1, 1, 1, 0, 1 };
 
@@ -16,24 +19,32 @@ namespace ConsoleApp1
             var codeAlph = new int[alph.Length][];
             for (var i = 0; i < alph.Length; i++)
             {
+                Console.WriteLine($"Символ: {alph[i]}");
                 var binArray = binArrays[i];
+                Console.WriteLine($"Исходные многочлен: {string.Join("", binArray)}");
 
                 var shift = Multi(binArray, n - k, 1);
                 Mod2(shift);
+                Console.WriteLine($"Информационный многочлен (со сдвигом на {n-k}): {string.Join("", shift)}");
                 Devide(shift, gen, out var rem);
                 Mod2(rem);
+                Console.WriteLine($"Остаток от деления информационного многочлена на порождающий: {string.Join("", rem)}");
                 var code = Sum(shift, rem);
                 Mod2(code);
 
-                code[0] = 1;
+                Console.WriteLine($"Кодовое слово (сумма инфомационного многочлена и остатка от деления): {string.Join("", code)}");
 
-                codeAlph[i] = code;
+                Console.WriteLine();
 
-                Devide(code, gen, out var checkRem);
-                Mod2(checkRem);
+                var randIndex = rnd.Next(0, 13);
+                code[randIndex] = code[randIndex] == 0 ? 1 : 0;
+                Console.WriteLine($"Внесение одиночной ошибки на позицию {randIndex}: {string.Join("", code)}");
 
-                if (checkRem.Any(bit => bit is not 0))
-                    ;
+                Devide(code, gen, out var sindrom);
+                Mod2(sindrom);
+                Console.WriteLine($"Синдром кода: {string.Join("", sindrom)}");
+
+                Console.WriteLine("\n\n");
             }
         }
 
@@ -43,7 +54,7 @@ namespace ConsoleApp1
 
             for (var i = 0; i < binArrays.Length; i++)
             {
-                var bytes = Encoding.UTF8.GetBytes(str[i].ToString());
+                var bytes = Encoding.GetEncoding(1251).GetBytes(str[i].ToString());
                 var stringBuilder = new StringBuilder();
                 foreach (var e in bytes)
                     stringBuilder.Append(Convert.ToString(e, 2).PadLeft(8, '0'));
